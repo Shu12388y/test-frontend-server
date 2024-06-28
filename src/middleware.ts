@@ -1,31 +1,40 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
+// import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+// import { NextResponse } from 'next/server';
 
-// Create matchers for the routes
-const isResourcesRoute = createRouteMatcher(['/resouces(.*)']);
-const isAdminRoute = createRouteMatcher(['/admin(.*)']);
+// // Create matchers for the routes
+// const isResourcesRoute = createRouteMatcher(['/resouces(.*)']);
+// const isAdminRoute = createRouteMatcher(['/admin(.*)']);
 
-export default clerkMiddleware((auth, req) => {
-  // Restrict resources route to signed-in users
-  if (isResourcesRoute(req)) {
-    auth().protect();
-  }
+// export default clerkMiddleware((auth, req) => {
+//   // Restrict resources route to signed-in users
+//   if (isResourcesRoute(req)) {
+//     auth().protect();
+//   }
 
-  // Restrict admin route to users with a specific role
-  if (isAdminRoute(req)) {
-    auth().protect({ role: 'org:admin' });
-  }
+//   // Restrict admin route to users with a specific role
+//   if (isAdminRoute(req)) {
+//     auth().protect({ role: 'org:admin' });
+//   }
 
-  // Continue processing the request
-  return NextResponse.next();
-});
+//   // Continue processing the request
+//   return NextResponse.next();
+// });
 
+// export const config = {
+//   matcher: [
+//     // Exclude files with a "." followed by an extension, which are typically static files.
+//     // Exclude files in the _next directory, which are Next.js internals.
+//     "/((?!.+\\.[\\w]+$|_next).*)",
+//     // Re-include any files in the api or trpc folders that might have an extension
+//     "/(api|trpc)(.*)"
+//   ]
+// };
+
+
+import {withAuth} from "@kinde-oss/kinde-auth-nextjs/middleware";
+export default function middleware(req:any) {
+  return withAuth(req);
+}
 export const config = {
-  matcher: [
-    // Exclude files with a "." followed by an extension, which are typically static files.
-    // Exclude files in the _next directory, which are Next.js internals.
-    "/((?!.+\\.[\\w]+$|_next).*)",
-    // Re-include any files in the api or trpc folders that might have an extension
-    "/(api|trpc)(.*)"
-  ]
+  matcher: ["/resouces(.*)"]
 };

@@ -3,47 +3,40 @@
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import {  useState } from "react";
 import Link from "next/link";
-
-import {
-  SignInButton,
-  SignedOut,
-  UserButton,
-  SignedIn
-} from '@clerk/nextjs';
+import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 const menuItems = [
   { name: "Home", href: "/" },
-  {name:"About", href:"/about"},
+  { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
   { name: "Resource", href: "/resourses" }
 ];
 
 export function Navbar() {
+  const { user } = useKindeBrowserClient();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [image, setImage] = useState("");
-
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-
   return (
     <div className="relative w-full bg-slate-700">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
-          <span>       
+          <span>
             <Link href="/">
-            <Image
-              width={50}
-              height={50}
-              src="https://utfs.io/f/a4db92de-2163-4ff9-885f-581e139e6a22-xkywas.png"
-              alt="logo of website"
+              <Image
+                width={50}
+                height={50}
+                src="https://utfs.io/f/a4db92de-2163-4ff9-885f-581e139e6a22-xkywas.png"
+                alt="logo of website"
               />
-          </Link>
+            </Link>
           </span>
           <span className="font-bold text-white">Lets Resource</span>
         </div>
@@ -62,17 +55,10 @@ export function Navbar() {
           </ul>
         </div>
         <div className="hidden lg:block">
-          <SignedOut>
-            <span className="text-white font-semibold">
-            <SignInButton mode="modal"/>
-            </span>
-          </SignedOut>
-          <SignedIn>
-            <UserButton/>
-          </SignedIn>
+          <span className="bg-white font-semibold px-2 py-1 rounded-lg">
+            {user ? <LogoutLink>Log out</LogoutLink> : <LoginLink>Sign in</LoginLink>}
+          </span>
         </div>
-
-         
         <div className="lg:hidden">
           <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer text-white" />
         </div>
@@ -119,15 +105,9 @@ export function Navbar() {
                   </nav>
                 </div>
                 <div className="flex flex-col items-center justify-center">
-                     <SignedOut>
-                      <span className="text-black font-semibold">
-                       <SignInButton/>
-
-                      </span>
-                      </SignedOut>
-                      <SignInButton>
-                        <UserButton/>
-                      </SignInButton>
+                  <span className="bg-white font-semibold px-2 py-1 rounded-lg">
+                    {user ? <LogoutLink>Log out</LogoutLink> : <LoginLink>Sign in</LoginLink>}
+                  </span>
                 </div>
               </div>
             </div>
@@ -137,6 +117,3 @@ export function Navbar() {
     </div>
   );
 }
-
-
-
